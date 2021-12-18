@@ -1,5 +1,5 @@
 import javax.swing.JPanel;
-import javax.swing.event.ActionListener;
+import java.awt.event.ActionListener;
 
 public class GamePanel extends JPanel implements ActionListener {
     
