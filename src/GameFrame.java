@@ -1,7 +1,7 @@
 import javax.swing.JFrame;
 
 public class GameFrame extends JFrame {
-
+    
     GameFrame() {
         // add area where things like buttons checkboxes and textfields 
         // can be added
