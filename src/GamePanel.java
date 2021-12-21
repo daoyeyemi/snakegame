@@ -1,5 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -63,24 +65,32 @@ public class GamePanel extends JPanel implements ActionListener {
         draw(g);
     }
 
-    public void draw(Graphics g) {        
-        for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
-            // draws line in format (x1, x2, y1, y2)
-            g.setColor(Color.darkGray);
-            g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);
-            g.drawLine(0, i*UNIT_SIZE, SCREEN_WIDTH, i*UNIT_SIZE);
-        }
-        g.setColor(Color.RED);
-        g.fillOval(applesX, applesY, UNIT_SIZE, UNIT_SIZE);
-        
-        for (int i = 0; i < bodyParts; i++) {
-            if (i == 0 ) {
-                g.setColor(Color.GREEN);
-                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
-            } else {
-                g.setColor(new Color(45, 180, 0));
-                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+    public void draw(Graphics g) {      
+        if (running) {
+            for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
+                // draws line in format (x1, x2, y1, y2)
+                g.setColor(Color.darkGray);
+                g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);
+                g.drawLine(0, i*UNIT_SIZE, SCREEN_WIDTH, i*UNIT_SIZE);
             }
+            g.setColor(Color.RED);
+            g.fillOval(applesX, applesY, UNIT_SIZE, UNIT_SIZE);
+            
+            for (int i = 0; i < bodyParts; i++) {
+                if (i == 0 ) {
+                    g.setColor(Color.GREEN);
+                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                } else {
+                    g.setColor(new Color(45, 180, 0));
+                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                }
+            }
+            g.setColor(Color.RED);
+            g.setFont(new Font("Ink Free", Font.BOLD, 75));
+            FontMetrics metrics = getFontMetrics(g.getFont());
+            g.drawString("Score : " + applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score : " + applesEaten))/2, g.getFont().getSize());
+        }  else {
+            gameOver(g);
         }
     }
 
@@ -113,7 +123,11 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void checkApple() {
-
+        if ((x[0] == applesX) && (y[0] == applesY)) {
+            bodyParts++;
+            applesEaten++;
+            newApple();
+        }
     }
 
     public void checkCollisions() {
@@ -146,7 +160,17 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void gameOver(Graphics g) {
+        // text showing score
+        g.setColor(Color.RED);
+        g.setFont(new Font("Ink Free", Font.BOLD, 75));
+        FontMetrics metrics1 = getFontMetrics(g.getFont());
+        g.drawString("Score : " + applesEaten, (SCREEN_WIDTH - metrics1.stringWidth("Score : " + applesEaten))/2, g.getFont().getSize());
 
+        // text showing game over screen
+        g.setColor(Color.RED);
+        g.setFont(new Font("Ink Free", Font.BOLD, 75));
+        FontMetrics metrics2 = getFontMetrics(g.getFont());
+        g.drawString("Game Overrrr", (SCREEN_WIDTH - metrics2.stringWidth("Game Over"))/2, SCREEN_HEIGHT/2);
     }
 
     // @override is used when we override a method in subclass
