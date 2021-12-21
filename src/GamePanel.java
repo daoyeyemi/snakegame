@@ -72,6 +72,15 @@ public class GamePanel extends JPanel implements ActionListener {
         g.setColor(Color.RED);
         g.fillOval(applesX, applesY, UNIT_SIZE, UNIT_SIZE);
         
+        for (int i = 0; i < bodyParts; i++) {
+            if (i == 0 ) {
+                g.setColor(Color.GREEN);
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            } else {
+                g.setColor(new Color(45, 180, 0));
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            }
+        }
     }
 
     public void newApple() {
@@ -80,7 +89,26 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void move() {
-
+        for (int i = bodyParts; i > 0; i--) {
+            x[i] = x[i - 1];
+            y[i] = y[i - 1];
+        }
+        // the switch statement basically has different outcomes 
+        // depending on the value of the expression
+        switch(direction) {
+            case 'U':
+                y[0] = y[0] - UNIT_SIZE;
+                break;
+            case 'L':
+                x[0] = x[0] - UNIT_SIZE;
+                break;
+            case 'D':
+                y[0] = y[0] + UNIT_SIZE;
+                break;
+            case 'R':
+                x[0] = x[0] + UNIT_SIZE;
+                break;
+        }
     }
 
     public void checkApple() {
@@ -88,7 +116,32 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void checkCollisions() {
+        // check if head collides w/ any part of body
+        for (int i = bodyParts; i > 0; i--) {
+            if ((x[0] == x[i]) && (y[0] == y[i])) {
+                running = false;
+            }
+        }
+        //  puts restriction on left side of panel
+        if(x[0] < 0) {
+            running = false;
+        }
+        //  puts restriction on top of panel
+        if(y[0] < 0) {
+            running = false;
+        }
+        //  puts restriction on bottom of panel
+        if(x[0] > SCREEN_WIDTH) {
+            running = false;
+        }
+        //  puts restriction on right side of panel
+        if(y[0] > SCREEN_HEIGHT) {
+            running = false;
+        }
 
+        if(!running) {
+            timer.stop();
+        }
     }
 
     public void gameOver(Graphics g) {
@@ -99,7 +152,12 @@ public class GamePanel extends JPanel implements ActionListener {
     // in this case the actionPerformed method
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if (running) {
+            move();
+            checkApple();
+            checkCollisions();
+        }
+        repaint();
     }
     // keyadapter is class for receiving keyboard events
     public class MyKeyAdapter extends KeyAdapter {

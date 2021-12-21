@@ -3,3 +3,5 @@ public class App {
         new GameFrame(); 
     }
 }
+// System.out.println("This is Java's equivalent of 
+// 'console.log' or 'print' ")
